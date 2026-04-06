@@ -1,69 +1,88 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Checkout from "./pages/Checkout";
+import { CartProvider } from "./context/CartContext";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
+import Navbar from "./components/Navbar";
+import ProtectedRoute from "./components/ProtectedRoute";
+
+import Products from "./pages/Products";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Products from "./pages/Products";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
 import VerifyOTP from "./pages/VerifyOTP";
 import Biometric from "./pages/Biometric";
-import ProtectedRoute from "./components/ProtectedRoute";
-import Admin from "./pages/Admin";   // ✅ ADD THIS
 import Orders from "./pages/Orders";
+import Admin from "./pages/Admin";
+import Payment from "./pages/Payment"; // ✅ ADD THIS
 
 function App() {
   return (
-    <BrowserRouter>
-      <Navbar />
+    <CartProvider>
+      <BrowserRouter>
+        <Navbar />
 
-      <Routes>
+        <Routes>
 
-      <Route
-  path="/orders"
-  element={
-    <ProtectedRoute>
-      <Orders />
-    </ProtectedRoute>
-  }
-/>
+          {/* HOME */}
+          <Route path="/" element={<Products />} />
 
-        <Route path="/" element={<Products />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+          {/* AUTH */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-        <Route
-          path="/cart"
-          element={
-            <ProtectedRoute>
-              <Cart />
-            </ProtectedRoute>
-          }
-        />
+          {/* PROTECTED */}
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute>
+                <Cart />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/checkout"
-          element={
-            <ProtectedRoute>
-              <Checkout />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute>
+                <Checkout />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route path="/verify-otp" element={<VerifyOTP />} />
-        <Route path="/biometric" element={<Biometric />} />
+          <Route
+            path="/orders"
+            element={
+              <ProtectedRoute>
+                <Orders />
+              </ProtectedRoute>
+            }
+          />
 
-        {/* ✅ ADMIN ROUTE (FIXED) */}
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute>
-              <Admin />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <Admin />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* SECURITY FLOW */}
+          <Route path="/verify-otp" element={<VerifyOTP />} />
+          <Route path="/biometric" element={<Biometric />} />
+
+          {/* PAYMENT */}
+          <Route path="/payment" element={<Payment />} />
+
+        </Routes>
+
+        {/* TOAST */}
+        <ToastContainer position="top-right" autoClose={2000} />
+
+      </BrowserRouter>
+    </CartProvider>
   );
 }
 
