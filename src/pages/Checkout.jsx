@@ -108,7 +108,7 @@ export default function Checkout() {
   }`}
 >
   {loading ? "Processing..." : "Place Order"}
-</button>
+</button>6
         </>
       )}
     </div>

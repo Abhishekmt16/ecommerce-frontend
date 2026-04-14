@@ -15,7 +15,7 @@ import VerifyOTP from "./pages/VerifyOTP";
 import Biometric from "./pages/Biometric";
 import Orders from "./pages/Orders";
 import Admin from "./pages/Admin";
-import Payment from "./pages/Payment"; // ✅ ADD THIS
+import Payment from "./pages/Payment";
 
 function App() {
   return (
@@ -69,7 +69,7 @@ function App() {
             }
           />
 
-          {/* SECURITY FLOW */}
+          {/* SECURITY */}
           <Route path="/verify-otp" element={<VerifyOTP />} />
           <Route path="/biometric" element={<Biometric />} />
 
