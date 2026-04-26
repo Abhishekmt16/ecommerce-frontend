@@ -14,7 +14,7 @@ export default function Biometric() {
 
     setTimeout(async () => {
       try {
-        const res = await fetch("http://localhost:5000/biometric/verify", {
+        const res = await fetch(`${import.meta.env.VITE_AI_URL}/biometric/verify`, {
           method: "POST"
         });
 
