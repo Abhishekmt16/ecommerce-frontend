@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:8080"
+  baseURL: import.meta.env.VITE_API_URL
 });
 
 // ✅ REQUEST INTERCEPTOR (attach token)
@@ -34,7 +34,7 @@ api.interceptors.response.use(
         const refreshToken = localStorage.getItem("refreshToken");
 
         const res = await axios.post(
-          "http://localhost:8080/api/users/refresh",
+          `${import.meta.env.VITE_API_URL}/api/users/refresh`,
           { refreshToken }
         );
 
