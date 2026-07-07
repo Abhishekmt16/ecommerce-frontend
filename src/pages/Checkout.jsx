@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { placeOrder } from "../api/orderApi";
 
 export default function Checkout() {
-  const { cart } = useContext(CartContext); // ✅ FIX
+  const { cart, clearCart } = useContext(CartContext); // ✅ FIX
   const navigate = useNavigate();
 
   const [riskLevel, setRiskLevel] = useState("");
@@ -22,48 +22,37 @@ export default function Checkout() {
     const res = await placeOrder(cart);
     const message = res.data;
 
-    if (message === "LOW") {
-      setRiskLevel("LOW");
+      if (message.includes("LOW")) {
+        setRiskLevel("LOW");
 
-      navigate("/payment", {
-        state: {
-          amount: total,
-          email: localStorage.getItem("email"),
-        },
-      });
+        clearCart(); // ✅ FIX
 
-    } else if (message === "MEDIUM") {
-      setRiskLevel("MEDIUM");
+        setTimeout(() => {
+          navigate("/payment");
+        }, 1500);
 
-      setTimeout(() => {
-        navigate("/verify-otp", {
-          state: {
-            amount: total,
-            email: localStorage.getItem("email"),
-          },
-        });
-      }, 1500);
+      } else if (message.includes("MEDIUM")) {
+        setRiskLevel("MEDIUM");
 
-    } else if (message === "HIGH") {
-      setRiskLevel("HIGH");
+        setTimeout(() => {
+          navigate("/verify-otp", {
+            state: { email: localStorage.getItem("email") }
+          });
+        }, 1500);
 
-      setTimeout(() => {
-        navigate("/biometric", {
-          state: {
-            amount: total,
-            email: localStorage.getItem("email"),
-          },
-        });
-      }, 1500);
+      } else if (message.includes("HIGH")) {
+        setRiskLevel("HIGH");
+
+        setTimeout(() => {
+          navigate("/biometric");
+        }, 1500);
+      }
+
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong ❌");
     }
-
-  } catch (err) {
-    console.error(err);
-    alert("Something went wrong ❌");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <div className="p-6">
@@ -119,7 +108,7 @@ export default function Checkout() {
   }`}
 >
   {loading ? "Processing..." : "Place Order"}
-</button>
+</button>6
         </>
       )}
     </div>
