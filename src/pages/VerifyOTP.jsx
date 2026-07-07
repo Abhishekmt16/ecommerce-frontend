@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
 import api from "../api/axios";
@@ -14,8 +14,6 @@ export default function VerifyOTP() {
   navigate("/checkout");
 }
 
-  const { clearCart } = useContext(CartContext);
-
   const handleVerify = async () => {
     try {
       const res = await api.post(
@@ -23,12 +21,17 @@ export default function VerifyOTP() {
       );
 
       if (res.data === "OTP_VERIFIED") {
-        clearCart();
+       
         setSuccess(true);
 
         setTimeout(() => {
-          navigate("/payment");
-        }, 2000);
+          navigate("/payment", {
+          state: {
+            amount: location.state.amount,
+            email: location.state.email,
+          },
+        });
+        }, 1500);
       } else {
         alert("Invalid OTP ❌");
       }
@@ -50,7 +53,8 @@ export default function VerifyOTP() {
 
         {success ? (
           <p className="text-green-600 font-bold text-lg">
-            ✅ OTP Verified! Order Placed
+            ✅ OTP Verified!
+            Redirecting to payment...
           </p>
         ) : (
           <>

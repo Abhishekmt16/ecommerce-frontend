@@ -1,5 +1,5 @@
-import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
 
 export default function Biometric() {
@@ -7,8 +7,8 @@ export default function Biometric() {
   const [success, setSuccess] = useState(false);
 
   const navigate = useNavigate();
-  const { clearCart } = useContext(CartContext);
-
+   const location = useLocation();
+ 
   const handleBiometric = async () => {
     setLoading(true);
 
@@ -21,15 +21,25 @@ export default function Biometric() {
         const data = await res.json();
 
         if (data.status === "VERIFIED") {
-          clearCart();
-          setSuccess(true);
 
-          setTimeout(() => {
-            navigate("/payment");
-          }, 2000); // show success before redirect
-        } else {
-          alert("Biometric failed ❌");
-        }
+  setSuccess(true);
+
+  setTimeout(() => {
+
+    navigate("/payment", {
+      state: {
+        amount: location.state.amount,
+        email: location.state.email,
+      },
+    });
+
+  }, 1500);
+
+} else {
+
+  alert("Biometric failed ❌");
+
+}
 
       } catch (err) {
         console.error(err);
@@ -50,7 +60,8 @@ export default function Biometric() {
 
         {success ? (
           <p className="text-green-600 font-bold text-lg">
-            ✅ Biometric Verified! Order Placed
+            ✅ Biometric Verified!
+Redirecting to payment...
           </p>
         ) : loading ? (
           <div>
